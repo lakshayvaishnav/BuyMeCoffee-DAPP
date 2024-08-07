@@ -53,7 +53,7 @@ async function main() {
   const tip = await { value: hre.ethers.parseEther("100") };
 
   // connecting to the signers with contract and calling the buyCoffee `function
-  await buyCoffee.connect(tipper1).buyCoffee("lxsh", "enjoy bruh...", tip);
+  await buyCoffee.connect(tipper1).buyCoffee("lxsh", "enjoy bruh...");
 
   await buyCoffee.connect(tipper2).buyCoffee("jane", "marry jane coffee", tip);
 
