@@ -38,8 +38,8 @@ contract Coffee {
     }
 
     function buyCoffee(
-        string memory _message,
-        string memory _name
+        string memory _name,
+        string memory _message
     ) public payable {
         require(msg.value > 0, "value must be greater than zero bruh !");
 
