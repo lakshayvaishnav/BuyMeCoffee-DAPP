@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ethers } from "ethers";
+import { ethers, formatEther, parseEther } from "ethers";
 import "./App.css";
 
 function App() {
@@ -146,7 +146,7 @@ function App() {
 
   const isWalletConnected = async () => {
     try {
-      const { ethereum } = window.ethereum;
+      const { ethereum } = window;
       const accounts = await ethereum.request({
         method: "eth_accounts",
       });
@@ -157,13 +157,13 @@ function App() {
         alert("make sure metamask is connected");
       }
     } catch (error) {
-      console.log("error");
+      console.log(error);
     }
   };
 
   const buyCoffee = async () => {
     try {
-      const { ethereum } = window.ethereum;
+      const { ethereum } = window;
 
       if (ethereum) {
         const provider = new ethers.BrowserProvider(ethereum);
@@ -197,14 +197,14 @@ function App() {
 
   const getMemos = async () => {
     try {
-      const { ethereum } = window.ethereum;
+      const { ethereum } = window;
       if (ethereum) {
         const provider = new ethers.BrowserProvider(ethereum);
         const signer = await provider.getSigner();
 
         const buyCoffeeContract = new ethers.Contract(
           contractAddress,
-          contractABI,
+          abi,
           signer
         );
         console.log("fetchin memos from chain");
@@ -223,6 +223,7 @@ function App() {
   useEffect(() => {
     let buyMeACoffee;
     isWalletConnected();
+    getMemos();
 
     const newMemo = (name, amount, timestamp, userAddress, message) => {
       console.log(
@@ -262,8 +263,8 @@ function App() {
             newMemo(name, amount, timestamp, userAddress, message);
           }
         );
-      } catch (err) {}
-      console.log(err);
+      } catch (Error) {}
+      console.log("event listner m error a gayi bro..");
 
       return () => {
         if (buyMeACoffee) {
@@ -273,7 +274,45 @@ function App() {
     }
   }, []);
 
-  return <></>;
+  return (
+    <>
+      {/* field for name  */}
+      <h1>{currentAccount}</h1>
+      <div>
+        <button onClick={() => connectWallet()}>Connect your wallet</button>
+      </div>
+      <div>
+        <label htmlFor="name">Name</label>
+        <input type="text" onChange={(event) => onNameChangeEvent(event)} />
+      </div>
+
+      <div>
+        <label htmlFor="message">Message</label>
+        <input type="text" onChange={(event) => onMessageChange(event)} />
+      </div>
+
+      <div>
+        <label htmlFor="Amount">Amount</label>
+        <input
+          type="number"
+          onChange={(event) => setAmount(parseEther(event.target.value))}
+        />
+      </div>
+
+      <div>
+        <button onClick={() => buyCoffee()}>Submit</button>
+      </div>
+
+      <div>
+        <button>Get Contract Balance</button>
+      </div>
+
+      <div>{memos}</div>
+      {/* field for message */}
+      {/* field for amount */}
+      {/* submit button */}
+    </>
+  );
 }
 
 export default App;
